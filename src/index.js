@@ -27,4 +27,3 @@ function hello() {
 document.body.appendChild(heading());
 document.body.appendChild(foxImage());
 document.body.appendChild(hello());
-document.body.appendChild(button());
