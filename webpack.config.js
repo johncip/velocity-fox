@@ -4,6 +4,11 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
 
 module.exports = {
+  resolve: {
+    alias: {
+      Config: path.resolve(__dirname, 'config')
+    }
+  },
   entry: {
     app: './src/index.js'
   },
@@ -29,7 +34,7 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
-        exclude: /node_modules/,
+        include: path.resolve(__dirname, "src"),
         loader: 'babel-loader',
         // is this the same as having a babelrc ??
         query: { presets: ['env'] }
