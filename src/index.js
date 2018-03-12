@@ -1,7 +1,6 @@
-import '../assets/styles/style.scss';
-
 import $ from 'jquery';
-
+import Clubhouse from 'clubhouse-lib';
+import '../assets/styles/style.scss';
 import Icon from '../assets/pretty.png';
 import secrets from 'Config/secrets.js';
 
