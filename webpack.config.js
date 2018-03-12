@@ -1,58 +1,51 @@
-const path               = require('path');
-const webpack            = require('webpack');
-// const autoprefixer      = require('autoprefixer');
-
-const PATHS = {
-  app: path.join(__dirname, 'src'),
-  images:path.join(__dirname,'src/assets/'),
-  build: path.join(__dirname, 'dist')
-};
-
-// const options = {
-//   host:'localhost',
-//   port:'1080'
-// };
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const webpack = require('webpack');
 
 module.exports = {
   entry: {
-    app: PATHS.app
+    app: './src/index.js'
   },
+  devtool: 'inline-source-map',
+  devServer: {
+    contentBase: path.resolve(__dirname, 'dist'),
+    hot: true
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      title: 'Output Management',
+      favicon: path.resolve(__dirname, 'assets', 'favicon.png'),
+    }),
+    new CleanWebpackPlugin(['dist']),
+    new webpack.NamedModulesPlugin(),
+    new webpack.HotModuleReplacementPlugin()
+  ],
   output: {
-    path: PATHS.build,
-    filename: 'bundle.js'
+    path: path.resolve(__dirname, 'dist'),
+    filename: '[name].bundle.js'
   },
-  // devServer: {
-  //     historyApiFallback: true,
-  //     hot: true,
-  //     inline: true,
-  //     stats: 'errors-only',
-  //     host: options.host,
-  //     port: options.port
-  //   },
   module: {
     rules: [
       {
         test: /\.js$/,
-        exclude: /(node_modules|bower_components)/,
+        exclude: /node_modules/,
         loader: 'babel-loader',
-        query: {
-          cacheDirectory: true,
-          presets: ['es2015']
-        }
+        // is this the same as having a babelrc ??
+        query: { presets: ['env'] }
       },
       {
-        test: /\.css$/,
-        loaders: ['style-loader', 'css-loader'],
-        include:PATHS.app
+        test: /\.(s*)css$/,
+        use: ['style-loader', 'css-loader', 'sass-loader']
       },
-
       {
-        test: /\.(ico|jpg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)(\?.*)?$/,
-        loader: 'file-loader',
-        query: {
-          name: '[path][name].[ext]'
-        }
+        test: /\.(jpg|png|gif|svg)$/,
+        use: 'file-loader'
       },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/,
+        use: 'file-loader'
+      }
     ]
   },
   // postcss: function() {
@@ -67,9 +60,4 @@ module.exports = {
   //     }),
   //   ];
   // },
-  plugins:[
-    new webpack.HotModuleReplacementPlugin({
-        multiStep: false
-    })
-  ]
 };
