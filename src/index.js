@@ -1,30 +1,28 @@
 import '../assets/styles/style.scss';
 
+import $ from 'jquery';
+
 import Icon from '../assets/pretty.png';
 import secrets from 'Config/secrets.js';
 
 function foxImage() {
-  const elem = document.createElement('div');
-  const myIcon = new Image();
-  myIcon.src = Icon;
-  myIcon.width = 200;
-  elem.appendChild(myIcon);
-  return elem;
+  return $('<img>')
+    .attr('src', Icon)
+    .width(200);
 }
 
 function heading() {
-  const elem = document.createElement('h1');
-  elem.innerHTML = 'Velocity Fox';
-  return elem;
+  return $('<h1>')
+    .text('Velocity Fox');
 }
 
 function hello() {
-  const elem = document.createElement('div');
-  elem.innerHTML = 'hello';
-  elem.classList.add('hello');
-  return elem;
+  return $('<div>')
+    .addClass('hello')
+    .html('hello2');
 }
 
-document.body.appendChild(heading());
-document.body.appendChild(foxImage());
-document.body.appendChild(hello());
+$(document.body)
+  .append(heading())
+  .append(foxImage())
+  .append(hello())
