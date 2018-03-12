@@ -1,12 +1,13 @@
 import '../assets/styles/style.scss';
 
 import Icon from '../assets/pretty.png';
+import secrets from 'Config/secrets.js';
 
 function foxImage() {
   const elem = document.createElement('div');
   const myIcon = new Image();
   myIcon.src = Icon;
-  myIcon.width = 300;
+  myIcon.width = 200;
   elem.appendChild(myIcon);
   return elem;
 }
