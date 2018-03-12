@@ -21,7 +21,14 @@ function hello() {
     .html('hello2');
 }
 
+function members() {
+  const clubhouse = Clubhouse.create(secrets.clubhouse);
+  clubhouse.listMembers().then(console.log);
+}
+
 $(document.body)
   .append(heading())
   .append(foxImage())
   .append(hello())
+
+members();
