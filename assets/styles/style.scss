@@ -1,0 +1,31 @@
+@import 'latofonts.css';
+
+// color
+$alice: aliceblue;
+$ink: #333366;
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: $alice;
+  margin: 4px 24px;
+}
+
+h1 {
+  font-family: 'LatoWebBlack';
+  color: $alice;
+  background-color: $ink;
+  border-radius: 4px;
+  padding: 4px 8px;
+}
+
+.hello {
+  color: $ink;
+  font-family: 'LatoWeb';
+}
+
+h1, .hello {
+  margin-bottom: 16px;
+}
