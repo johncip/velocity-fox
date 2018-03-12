@@ -24,7 +24,10 @@ module.exports = {
     }),
     new CleanWebpackPlugin(['dist']),
     new webpack.NamedModulesPlugin(),
-    new webpack.HotModuleReplacementPlugin()
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.ProvidePlugin({
+      'fetch': 'fetch-everywhere'
+    }),
   ],
   output: {
     path: path.resolve(__dirname, 'dist'),
