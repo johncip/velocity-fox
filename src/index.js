@@ -1,6 +1,7 @@
 import '../assets/styles/style.scss';
 
 import $ from 'jquery';
+import _ from 'lodash';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Clubhouse from 'clubhouse-lib';
