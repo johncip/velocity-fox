@@ -112,7 +112,6 @@ const PROJECT_IDS = {
 }
 
 // TODO: "duplicate" story data for multiple owners
-// TODO: replace SHOW_* constants with props
 class AppRoot extends React.Component {
   constructor(props) {
     super();
