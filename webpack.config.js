@@ -39,8 +39,11 @@ module.exports = {
         test: /\.js$/,
         include: path.resolve(__dirname, "src"),
         loader: 'babel-loader',
-        // is this the same as having a babelrc ??
-        query: { presets: ['env'] }
+        options: {
+          cacheDirectory: true,
+          presets: ['env', 'react'],
+          plugins: ['transform-object-rest-spread']
+        }
       },
       {
         test: /\.(s*)css$/,
