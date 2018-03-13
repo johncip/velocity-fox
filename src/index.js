@@ -32,7 +32,7 @@ class MemberList extends React.PureComponent {
           const ownerNames = getOwnerNames(ownerStr);
           return (
             <div className="storyList" key={ownerStr}>
-              <h2 class="ownerName">{ownerNames}</h2>
+              <h2 class="storyList--ownerName">{ownerNames}</h2>
               <StoryList stories={this.props.groupedStories[ownerStr]} />
             </div>
           );
@@ -61,14 +61,12 @@ const Header = props =>
 // TODO: expand props
 const StoryList = props =>
   <ul className="storyList--list">{
-    props.stories.map((x) =>
-      <li key={x.id}><Story {...x} /></li>
-    )
+    props.stories.map((x) => <Story {...x} key={x.id} />)
   }</ul>;
 
 // TODO: add description
 const Story = (props) =>
-  <div className="story">
+  <li className="story">
     <span className="story--id">
       {'#' + props.id}
     </span>
@@ -78,7 +76,7 @@ const Story = (props) =>
     <Estimate points={props.estimate} />
     <StoryType type={props.story_type} />
     <span className="story--name">{props.name}</span>
-  </div>;
+  </li>;
 
 const Estimate = ({points}) => {
   if (points) {

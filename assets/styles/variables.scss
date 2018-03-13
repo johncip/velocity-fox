@@ -8,14 +8,18 @@ $red-light: rgb(210, 154, 154);
 $yellow-light: rgb(250, 240, 180);
 $white: rgb(255, 255, 255);
 
-$bg: $white;
+$bg: aliceblue;
 $ink: rgb(51, 51, 102);
 $ink-light: rgb(165, 165, 210);
 $ink-lighter: rgb(210, 210, 240);
 
+$font-family-light: 'LatoWebLight';
 $font-family-normal: 'LatoWeb';
 $font-family-bold: 'LatoWebBold';
 $font-family-black: 'LatoWebBlack';
+
+$font-size-small: 10pt;
+$font-size-normal: 12pt;
 
 $story-inner-margin: 4px;
 
@@ -27,7 +31,7 @@ $story-inner-margin: 4px;
   background-color: $ink-light;
   text-align: center;
   font-family: $font-family-bold;
-  font-size: 8pt;
+  font-size: $font-size-small;
   display: inline-block;
   padding-bottom: 1px;
   min-height: 1.3em;

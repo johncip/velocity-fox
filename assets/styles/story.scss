@@ -13,8 +13,8 @@
   background-color: transparent;
   width: 6ch;
   text-align: right;
-  font-family: $font-family-bold;
-  font-size: 8pt;
+  font-family: $font-family-normal;
+  font-size: $font-size-small;
 }
 
 .story--workflowState {
@@ -31,9 +31,10 @@
 }
 
 .story--estimate-none {
-  padding: 0;
-  border: solid 1px $ink-lighter;
-  background-color: transparent;
+  // min-height: 1.4em;
+  // padding: 0;
+  // border: solid 1px $ink-lighter;
+  // background-color: transparent;
 }
 
 .story--type {
@@ -55,13 +56,5 @@
 }
 
 .story--name {
-  font-size: 10pt;
-}
-
-.storyList + .storyList {
-  margin-top: 16px;
-}
-
-.storyList--list {
-  margin-bottom: 16px;
+  font-size: $font-size-normal;
 }
