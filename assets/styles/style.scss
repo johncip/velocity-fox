@@ -3,6 +3,7 @@
 // color
 $alice: aliceblue;
 $ink: #333366;
+$ink-light: #a5a5d2;
 
 * {
   box-sizing: border-box;
@@ -15,15 +16,27 @@ body {
   margin: 8px 24px;
 }
 
-h1 {
+.siteHeading {
+  display: flex;
+  align-items: center;
+  width: 100%;
   font-family: 'LatoWebBlack';
-  color: $alice;
+  padding: 4px 8px;
   background-color: $ink;
   border-radius: 4px;
-  padding: 4px 8px;
+  color: $ink-light;
+  font-size: 28pt;
 }
 
-.hello {
+.memberList > li {
+  margin-bottom: 16px;
+}
+
+li {
+  margin-left: 2em;
+}
+
+p {
   color: $ink;
   font-family: 'LatoWeb';
 }
