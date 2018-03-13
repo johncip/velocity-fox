@@ -3,7 +3,7 @@
 
 // variables
 
-$alice: white;
+$bg: white;
 $ink: #333366;
 $ink-light: #a5a5d2;
 
@@ -41,7 +41,7 @@ $story-inner-margin: 4px;
 // base
 
 body {
-  background-color: $alice;
+  background-color: $bg;
 }
 
 h1 {
