@@ -2,6 +2,8 @@ import '../assets/styles/style.scss';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import classNames from 'classnames';
+
 import secrets from 'Config/secrets.js';
 import workflowStates from './workflowStates.js';
 
@@ -58,45 +60,67 @@ const Header = props =>
     <img src={foxIcon} height={50} />
   </header>
 
-// TODO: expand props
-const StoryList = props =>
-  <ul className="storyList--list">{
-    props.stories.map((x) => <Story {...x} key={x.id} />)
-  }</ul>;
-
-// TODO: add description
-const Story = (props) =>
-  <li className="story">
-    <span className="story--id">
-      {'#' + props.id}
-    </span>
-    <span className="story--workflowState">
-      {workflowStates[props.workflow_state_id]}
-    </span>
-    <Estimate points={props.estimate} />
-    <StoryType type={props.story_type} />
-    <span className="story--name">{props.name}</span>
-  </li>;
-
-const Estimate = ({points}) => {
-  if (points) {
-    return <span className="story--estimate">{points}</span>
-  } else {
-    return <span className="story--estimate story--estimate-none">{points || '\u00A0'}</span>
+class StoryList extends React.PureComponent {
+  renderStory(story) {
+    return <Story key={story.id} {...story} />;
   }
-};
 
-// TODO classnames
-// TODO switch
-const StoryType = ({type}) => {
-  if (type == 'chore') {
-    return <span className="story--type story--type-chore">{type}</span>
-  } else if (type == 'feature') {
-    return <span className="story--type story--type-feature">{type}</span>
-  } else {
-    return <span className="story--type story--type-bug">{type}</span>
+  render() {
+    return (
+      <ul className="storyList--list">
+        {this.props.stories.map(this.renderStory)}
+      </ul>
+    );
   }
-};
+}
+
+class Story extends React.PureComponent {
+  render() {
+    return (
+      <li className="story">
+        <span className="story--id">
+          {'#' + this.props.id}
+        </span>
+        <span className="story--workflowState">
+          {workflowStates[this.props.workflow_state_id]}
+        </span>
+        <Estimate points={this.props.estimate} />
+        <StoryType type={this.props.story_type} />
+        <span className="story--name">{this.props.name}</span>
+      </li>
+    );
+  }
+}
+
+class Estimate extends React.PureComponent {
+  classes() {
+    return classNames('story--estimate', {
+      'story--estimate-none': this.props.points
+    });
+  }
+
+  render() {
+    return (
+      <span className={this.classes()}>
+        {this.props.points || '\u00a0'}
+      </span>
+    );
+  }
+}
+
+class StoryType extends React.PureComponent {
+  classes() {
+    return classNames('story--type', {
+      'story--type-chore': this.props.type == 'chore',
+      'story--type-feature': this.props.type == 'feature',
+      'story--type-bug': this.props.type == 'bug'
+    });
+  }
+
+  render() {
+    return <span className={this.classes()}>{this.props.type}</span>;
+  }
+}
 
 // ---------------------------------------------------------------------------------------
 // AppRoot
