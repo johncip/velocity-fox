@@ -16,7 +16,7 @@ const getOwnerName = (ownerId) => {
   if (!member) {
     return ownerId;
   }
-  return `@${member.mention_name}`;
+  return '@' + member.mention_name;
 };
 
 const getOwnerNames = (ownerStr) => {
@@ -27,14 +27,13 @@ const getOwnerNames = (ownerStr) => {
 class MemberList extends React.PureComponent {
   render() {
     return (
-      <div className="memberList">
+      <div>
         {Object.keys(this.props.groupedStories).map((ownerStr) => {
           const ownerNames = getOwnerNames(ownerStr);
           return (
             <div className="storyList" key={ownerStr}>
-              <h2>{ownerNames}</h2>
+              <h2 class="ownerName">{ownerNames}</h2>
               <StoryList stories={this.props.groupedStories[ownerStr]} />
-              <hr/>
             </div>
           );
         })}
@@ -59,6 +58,7 @@ const Header = props =>
     <img src={foxIcon} height={50} />
   </header>
 
+// TODO: expand props
 const StoryList = props =>
   <ul className="storyList--list">{
     props.stories.map((x) =>
@@ -66,22 +66,25 @@ const StoryList = props =>
     )
   }</ul>;
 
-const Story = ({name, workflow_state_id, story_type, estimate}) =>
-  // TODO: add description
+// TODO: add description
+const Story = (props) =>
   <div className="story">
-    <span className="story--workflowState">
-      {workflowStates[workflow_state_id]}
+    <span className="story--id">
+      {'#' + props.id}
     </span>
-    <Estimate points={estimate} />
-    <StoryType type={story_type} />
-    <span className="story--name">{name}</span>
+    <span className="story--workflowState">
+      {workflowStates[props.workflow_state_id]}
+    </span>
+    <Estimate points={props.estimate} />
+    <StoryType type={props.story_type} />
+    <span className="story--name">{props.name}</span>
   </div>;
 
 const Estimate = ({points}) => {
   if (points) {
     return <span className="story--estimate">{points}</span>
   } else {
-    return <span className="story--estimate story--estimate-none">{points || ' '}</span>
+    return <span className="story--estimate story--estimate-none">{points || '\u00A0'}</span>
   }
 };
 
@@ -157,7 +160,9 @@ class AppRoot extends React.Component {
     return (
       <div>
         <Header />
-        {this.state.groupedStories ? this.renderMemberList() : <Loading />}
+        <div class="content">
+          {this.state.groupedStories ? this.renderMemberList() : <Loading />}
+        </div>
       </div>
     );
   }

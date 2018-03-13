@@ -1,0 +1,67 @@
+.story {
+  color: $ink;
+  font-family: $font-family-normal;
+
+  span + span {
+    margin-left: 8px;
+  }
+}
+
+.story--id {
+  display: inline-block;
+  color: $ink;
+  background-color: transparent;
+  width: 6ch;
+  text-align: right;
+  font-family: $font-family-bold;
+  font-size: 8pt;
+}
+
+.story--workflowState {
+  @include badge;
+  width: 15ch;
+  color: $gray-light;
+  border: solid 1px $gray-lighter;
+  background-color: $white;
+}
+
+.story--estimate {
+  @include badge;
+  width: 3.5ch;
+}
+
+.story--estimate-none {
+  padding: 0;
+  border: solid 1px $ink-lighter;
+  background-color: transparent;
+}
+
+.story--type {
+  @include badge;
+  width: 4em;
+}
+
+.story--type-feature {
+  background-color: $yellow-light;
+  color: $ink;
+}
+
+.story--type-chore {
+  background-color: $gray-light;
+}
+
+.story--type-bug {
+  background-color: $red-light;
+}
+
+.story--name {
+  font-size: 10pt;
+}
+
+.storyList + .storyList {
+  margin-top: 16px;
+}
+
+.storyList--list {
+  margin-bottom: 16px;
+}

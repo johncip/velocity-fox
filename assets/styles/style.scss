@@ -1,47 +1,7 @@
-@import 'latofonts.css';
-@import 'lds_dual_ring.css';
-
-// variables
-
-$gray: rgb(128, 128, 128);
-$gray-light: rgb(176, 176, 176);
-$gray-lighter: rgb(220, 220, 220);
-
-$red-light: rgb(210, 154, 154);
-$yellow-light: rgb(250, 240, 180);
-$white: rgb(255, 255, 255);
-
-$bg: $white;
-$ink: rgb(51, 51, 102);
-$ink-light: rgb(165, 165, 210);
-$ink-lighter: rgb(210, 210, 240);
-
-$font-family-normal: 'LatoWeb';
-$font-family-bold: 'LatoWebBold';
-$font-family-black: 'LatoWebBlack';
-
-$story-inner-margin: 4px;
-
-// mixins
-
-@mixin badge {
-  border-radius: 2px;
-  color: white;
-  background-color: $ink-light;
-  font-family: $font-family-bold;
-  text-align: center;
-  font-size: 8pt;
-  display: inline-block;
-  padding-bottom: 1px;
-}
-
-// reset
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+@import 'vendor/latofonts.css';
+@import 'vendor/lds_dual_ring.css';
+@import 'variables';
+@import 'story';
 
 // base
 
@@ -99,59 +59,12 @@ li {
   }
 }
 
-.memberList {
+.content {
   margin: 8px 24px;
 }
 
-.story {
+.ownerName {
   color: $ink;
-  font-family: $font-family-normal;
-
-  span + span {
-    margin-left: 8px;
-  }
+  font-family: $font-family-bold;
 }
 
-.story--workflowState {
-  @include badge;
-  width: 15ch;
-}
-
-.story--estimate {
-  @include badge;
-  width: 3.5ch;
-}
-
-.story--estimate-none {
-  padding: 0;
-}
-
-.story--type {
-  @include badge;
-  width: 4em;
-}
-
-.story--type-feature {
-  background-color: $yellow-light;
-  color: $ink;
-}
-
-.story--type-chore {
-  background-color: $gray-light;
-}
-
-.story--type-bug {
-  background-color: $red-light;
-}
-
-.story--name {
-  font-size: 10pt;
-}
-
-.storyList + .storyList {
-  margin-top: 16px;
-}
-
-.storyList--list {
-  margin-bottom: 16px;
-}
