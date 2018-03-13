@@ -20,7 +20,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'Output Management',
+      title: 'Velocity Fox',
       favicon: path.resolve(__dirname, 'assets', 'favicon.png'),
     }),
     new CleanWebpackPlugin(['dist']),
