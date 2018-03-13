@@ -8,7 +8,7 @@ $red-light: rgb(210, 154, 154);
 $yellow-light: rgb(250, 240, 180);
 $white: rgb(255, 255, 255);
 
-$bg: aliceblue;
+$bg: rgb(240, 245, 255);
 $ink: rgb(51, 51, 102);
 $ink-light: rgb(165, 165, 210);
 $ink-lighter: rgb(210, 210, 240);
@@ -35,6 +35,13 @@ $story-inner-margin: 4px;
   display: inline-block;
   padding-bottom: 1px;
   min-height: 1.3em;
+}
+
+@mixin truncate {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 // reset
