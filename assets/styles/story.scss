@@ -28,6 +28,7 @@
 .story--estimate {
   @include badge;
   width: 3.5ch;
+  border: solid 1px darken($ink-light, 10%);
 }
 
 .story--estimate-none {
@@ -45,14 +46,17 @@
 .story--type-feature {
   background-color: $yellow-light;
   color: $ink;
+  border: solid 1px darken($yellow-light, 10%);
 }
 
 .story--type-chore {
   background-color: $gray-light;
+  border: solid 1px darken($gray-light, 10%);
 }
 
 .story--type-bug {
   background-color: $red-light;
+  border: solid 1px darken($red-light, 10%);
 }
 
 .story--name {
