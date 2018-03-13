@@ -19,6 +19,8 @@
 .story {
   color: $ink;
   font-family: $font-family-normal;
+  display: flex;
+  align-items: baseline;
 
   span + span {
     margin-left: 8px;
@@ -26,13 +28,14 @@
 }
 
 .story--id {
-  display: inline-block;
-  color: $ink;
-  background-color: transparent;
-  width: 6ch;
+  @include badge;
+
+  color: $gray-light;
+  border: solid 1px $gray-lighter;
+  background-color: white;
+  width: 7.5ch;
+  padding-right: 4px;
   text-align: right;
-  font-family: $font-family-normal;
-  font-size: $font-size-small;
 }
 
 .story--workflowState {
@@ -58,7 +61,7 @@
 
 .story--type {
   @include badge;
-  width: 4em;
+  width: 7ch;
 }
 
 .story--type-feature {
@@ -78,5 +81,7 @@
 }
 
 .story--name {
+  @include truncate;
+  max-width: 65ch;
   font-size: $font-size-normal;
 }
