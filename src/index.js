@@ -32,7 +32,7 @@ class MemberList extends React.PureComponent {
           const ownerNames = getOwnerNames(ownerStr);
           return (
             <div className="storyList" key={ownerStr}>
-              <h2 class="storyList--ownerName">{ownerNames}</h2>
+              <h2 className="storyList--ownerName">{ownerNames}</h2>
               <StoryList stories={this.props.groupedStories[ownerStr]} />
             </div>
           );
@@ -157,7 +157,7 @@ class AppRoot extends React.Component {
     return (
       <div>
         <Header />
-        <div class="content">
+        <div className="content">
           {this.state.groupedStories ? this.renderMemberList() : <Loading />}
         </div>
       </div>
