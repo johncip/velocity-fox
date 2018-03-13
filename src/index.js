@@ -8,6 +8,18 @@ import Clubhouse from 'clubhouse-lib';
 import Icon from '../assets/pretty.png';
 import secrets from 'Config/secrets.js';
 
+const PROJECT_IDS = {
+  web_app: 5,
+}
+
+const WORKFLOW_STATES = {
+  500000014: 'Unscheduled',
+  500000011: 'Ready for Development',
+  500007040: 'Next Up',
+  500000015: 'In Development',
+  500000010: 'Ready for Review',
+  500000012: 'Completed'
+}
 
 const Heading = props =>
   <h1 className="siteHeading">
@@ -16,8 +28,6 @@ const Heading = props =>
     Velocity Fox
   </h1>
 
-// TODO: exclude .disabled
-// TODO: exclude profile.deactivated ?
 const MemberList = ({members}) =>
   <ul className="memberList">{
     members.map((m) =>
@@ -51,20 +61,74 @@ class Root extends React.PureComponent {
     return (
       <div>
         <Heading/>
-        <MemberList members={this.props.members}/>
+        {Object.keys(this.props.groupedStories).map((ownerId) => {
+          return (
+            <div key={ownerId}>
+              <h2>StoryList</h2>
+              <h2>{ownerId}</h2>
+              <StoryList stories={this.props.groupedStories[ownerId]}/>
+            </div>
+          );
+        })}
       </div>
     );
   }
 }
 
+const StoryList = ({stories}) =>
+  <ul className="storyList">{
+    stories.map((x) =>
+      <li key={x.id}><Story {...x} /></li>
+    )
+  }</ul>
+
+const Story = ({name, workflow_state_id, story_type, estimate}) =>
+  // estimate
+  // description
+  <div className="story">
+    <span className="story--workflowState">
+      {`[${WORKFLOW_STATES[workflow_state_id]}]`}
+    </span>
+    <span className="story--storyType">
+      {`[${story_type}]`}
+    </span>
+    <span className="story--name">
+      {name}
+    </span>
+    {estimate ?
+      <span className="story--estimate">
+        {`[${estimate}]`}
+      </span>
+      : null}
+  </div>
+
 const clubhouse = Clubhouse.create(secrets.clubhouse);
+
+// TODO: "duplicate" story data for multiple owners
+const groupStories = (stories) => {
+  const grouped = _.groupBy(stories, x => x.owner_ids);
+  delete grouped[''];
+
+  Object.keys(grouped).forEach((ownerId) => {
+    console.log(ownerId);
+    grouped[ownerId] = grouped[ownerId].filter(x => {
+      if (WORKFLOW_STATES[x.workflow_state_id] == 'Completed') {
+        return false;
+      }
+      if (WORKFLOW_STATES[x.workflow_state_id] == 'Unscheduled') {
+        return false;
+      }
+      return true;
+    });
+  });
+
+  return grouped;
+}
 
 const $target = $('<div>').addClass('.js-target')
 $(document.body).append($target)
 
-clubhouse.listMembers().then((x) =>
-  ReactDOM.render(<Root members={x}/>, $target[0])
-);
-
-// Dibyo member ID: 582f62b5-acb0-454b-bafd-04e77f0b460e
-// Dibyo profile ID: 582f62b5-5836-48dd-944a-d8ef1681ae1a
+clubhouse.listStories(PROJECT_IDS.web_app).then((response) => {
+  const groupedStories = groupStories(response);
+  return ReactDOM.render(<Root groupedStories={groupedStories}/>, $target[0]);
+});
