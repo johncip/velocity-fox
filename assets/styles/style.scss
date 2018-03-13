@@ -114,12 +114,12 @@ li {
 
 .story--workflowState {
   @include badge;
-  width: 12em;
+  width: 15ch;
 }
 
 .story--estimate {
   @include badge;
-  width: 2em;
+  width: 3.5ch;
 }
 
 .story--estimate-none {
