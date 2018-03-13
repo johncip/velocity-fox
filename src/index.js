@@ -76,17 +76,24 @@ class StoryList extends React.PureComponent {
 
 class Story extends React.PureComponent {
   render() {
+    const url = `https://app.clubhouse.io/gradescope/story/${this.props.id}`
     return (
       <li className="story">
-        <span className="story--id">
-          {'#' + this.props.id}
-        </span>
         <span className="story--workflowState">
           {workflowStates[this.props.workflow_state_id]}
         </span>
         <Estimate points={this.props.estimate} />
         <StoryType type={this.props.story_type} />
-        <span className="story--name">{this.props.name}</span>
+        <span className="story--id">
+          <a href={url}>
+            {'#' + this.props.id}
+          </a>
+        </span>
+        <span className="story--name">
+          <a href={url}>
+            {this.props.name}
+          </a>
+        </span>
       </li>
     );
   }
