@@ -1,3 +1,21 @@
+.storyList {
+  .story + .story {
+    margin-top: 4px;
+    margin-bottom: 4px;
+  }
+}
+
+.storyList + .storyList {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.storyList--ownerName {
+  color: $ink;
+  font-family: $font-family-bold;
+  margin-bottom: 8px;
+}
+
 .story {
   color: $ink;
   font-family: $font-family-normal;

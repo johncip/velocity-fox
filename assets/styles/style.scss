@@ -62,21 +62,3 @@ li {
 .content {
   margin: 8px 24px;
 }
-
-.storyList {
-  .story + .story {
-    margin-top: 2px;
-    margin-bottom: 2px;
-  }
-}
-
-.storyList + .storyList {
-  margin-top: 16px;
-  margin-bottom: 16px;
-}
-
-.storyList--ownerName {
-  color: $ink;
-  font-family: $font-family-bold;
-  margin-bottom: 8px;
-}
