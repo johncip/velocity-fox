@@ -1,9 +1,15 @@
 @import 'latofonts.css';
 
-// color
-$alice: aliceblue;
+// variables
+
+$alice: white;
 $ink: #333366;
 $ink-light: #a5a5d2;
+$font-normal: 'LatoWeb';
+$font-bold: 'LatoWebBold';
+$font-black: 'LatoWebBlack';
+
+// reset
 
 * {
   box-sizing: border-box;
@@ -11,16 +17,33 @@ $ink-light: #a5a5d2;
   padding: 0;
 }
 
+// base
+
 body {
   background-color: $alice;
   margin: 8px 24px;
 }
 
+h1 {
+  font-family: $font-black;
+}
+
+h2 {
+  font-family: $font-bold;
+}
+
+p {
+  color: $ink;
+  font-family: $font-normal;
+}
+
+// modules
+
 .siteHeading {
   display: flex;
   align-items: center;
   width: 100%;
-  font-family: 'LatoWebBlack';
+  font-family: $font-black;
   padding: 4px 8px;
   background-color: $ink;
   border-radius: 4px;
@@ -28,19 +51,37 @@ body {
   font-size: 28pt;
 }
 
+$story-inner-margin: 4px;
+
+.story {
+  color: $ink;
+  font-family: $font-normal;
+
+  span + span {
+    margin-left: 8px;
+  }
+}
+
+.story--workflowState {
+  font-size: 8pt;
+}
+
+.story--estimate {
+  font-size: 8pt;
+}
+
+.story--name {
+  font-size: 10pt;
+}
+
+.story--storyType {
+  font-size: 8pt;
+}
+
 .memberList > li {
   margin-bottom: 16px;
 }
 
-li {
+.memberlist li {
   margin-left: 2em;
-}
-
-p {
-  color: $ink;
-  font-family: 'LatoWeb';
-}
-
-h1, .hello {
-  margin-bottom: 16px;
 }
