@@ -1,72 +1,40 @@
 import '../assets/styles/style.scss';
 
-import $ from 'jquery';
-import _ from 'lodash';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Clubhouse from 'clubhouse-lib';
-import Icon from '../assets/pretty.png';
 import secrets from 'Config/secrets.js';
+import workflowStates from './workflowStates.js';
 
-const PROJECT_IDS = {
-  web_app: 5,
-}
+// -------------------------------------------------------------------------------------------
+// MemberList
+// -------------------------------------------------------------------------------------------
 
-const WORKFLOW_STATES = {
-  500000014: 'Unscheduled',
-  500000011: 'Ready for Development',
-  500007040: 'Next Up',
-  500000015: 'In Development',
-  500000010: 'Ready for Review',
-  500000012: 'Completed'
-}
+import members from './members.js';
 
-const Heading = props =>
-  <h1 className="siteHeading">
-    <img src={Icon} height={50} />
-    &nbsp;
-    Velocity Fox
-  </h1>
+const getOwnerName = (ownerId) => {
+  const member = members[ownerId];
+  if (!member) {
+    return ownerId;
+  }
+  return `@${member.mention_name}`;
+};
 
-const MemberList = ({members}) =>
-  <ul className="memberList">{
-    members.map((m) =>
-      <li key={m.id}><Member {...m} /></li>
-    )
-  }</ul>
+const getOwnerNames = (ownerStr) => {
+  const ownerIds = ownerStr.split(',');
+  return ownerIds.map(getOwnerName).join(', ');
+};
 
-const Member = props =>
-  <ul>
-    <li>{`entity type: ${props.entity_type}`}</li>
-    <li>{`id: ${props.id}`}</li>
-    <li>{`role: ${props.role}`}</li>
-    <li>{`disabled: ${props.disabled}`}</li>
-    <li>profile: <Profile {...props.profile} /></li>
-  </ul>
-
-const Profile = props =>
-  <ul>
-    <strong><li>{`${props.name}`}</li></strong>
-    <strong><li>{`@${props.mention_name}`}</li></strong>
-    <li>{`email_address: ${props.email_address}`}</li>
-    <li>{`entity_type: ${props.entity_type}`}</li>
-    {/* <li> */}
-    {/*   <img src={`https://www.gravatar.com/avatar/${props.gravatar_hash}.jpg`}/> */}
-    {/* </li> */}
-    <li>{`id: ${props.id}`}</li>
-  </ul>
-
-class Root extends React.PureComponent {
+class MemberList extends React.PureComponent {
   render() {
     return (
-      <div>
-        <Heading/>
-        {Object.keys(this.props.groupedStories).map((ownerId) => {
+      <div className="memberList">
+        {Object.keys(this.props.groupedStories).map((ownerStr) => {
+          const ownerNames = getOwnerNames(ownerStr);
           return (
-            <div key={ownerId}>
-              <h2>StoryList</h2>
-              <h2>{ownerId}</h2>
-              <StoryList stories={this.props.groupedStories[ownerId]}/>
+            <div className="storyList" key={ownerStr}>
+              <h2>{ownerNames}</h2>
+              <StoryList stories={this.props.groupedStories[ownerStr]} />
+              <hr/>
             </div>
           );
         })}
@@ -75,60 +43,134 @@ class Root extends React.PureComponent {
   }
 }
 
-const StoryList = ({stories}) =>
-  <ul className="storyList">{
-    stories.map((x) =>
-      <li key={x.id}><Story {...x} /></li>
-    )
-  }</ul>
+// -------------------------------------------------------------------------------------------
+// Misc Components
+// -------------------------------------------------------------------------------------------
 
-const Story = ({name, workflow_state_id, story_type, estimate}) =>
-  // estimate
-  // description
-  <div className="story">
-    <span className="story--workflowState">
-      {`[${WORKFLOW_STATES[workflow_state_id]}]`}
-    </span>
-    <span className="story--storyType">
-      {`[${story_type}]`}
-    </span>
-    <span className="story--name">
-      {name}
-    </span>
-    {estimate ?
-      <span className="story--estimate">
-        {`[${estimate}]`}
-      </span>
-      : null}
+import foxIcon from '../assets/pretty.png';
+
+const Loading = props =>
+  <div className="loading">
+    <div className="lds-dual-ring" />
   </div>
 
-const clubhouse = Clubhouse.create(secrets.clubhouse);
+const Header = props =>
+  <header className="header">
+    <img src={foxIcon} height={50} />
+  </header>
 
-// TODO: "duplicate" story data for multiple owners
-const groupStories = (stories) => {
-  const grouped = _.groupBy(stories, x => x.owner_ids);
-  delete grouped[''];
+const StoryList = props =>
+  <ul className="storyList--list">{
+    props.stories.map((x) =>
+      <li key={x.id}><Story {...x} /></li>
+    )
+  }</ul>;
 
-  Object.keys(grouped).forEach((ownerId) => {
-    console.log(ownerId);
-    grouped[ownerId] = grouped[ownerId].filter(x => {
-      if (WORKFLOW_STATES[x.workflow_state_id] == 'Completed') {
-        return false;
-      }
-      if (WORKFLOW_STATES[x.workflow_state_id] == 'Unscheduled') {
-        return false;
-      }
-      return true;
-    });
-  });
+const Story = ({name, workflow_state_id, story_type, estimate}) =>
+  // TODO: add description
+  <div className="story">
+    <span className="story--workflowState">
+      {workflowStates[workflow_state_id]}
+    </span>
+    <Estimate points={estimate} />
+    <StoryType type={story_type} />
+    <span className="story--name">{name}</span>
+  </div>;
 
-  return grouped;
+const Estimate = ({points}) => {
+  if (points) {
+    return <span className="story--estimate">{points}</span>
+  } else {
+    return <span className="story--estimate story--estimate-none">{points || ' '}</span>
+  }
+};
+
+// TODO classnames
+// TODO switch
+const StoryType = ({type}) => {
+  if (type == 'chore') {
+    return <span className="story--type story--type-chore">{type}</span>
+  } else if (type == 'feature') {
+    return <span className="story--type story--type-feature">{type}</span>
+  } else {
+    return <span className="story--type story--type-bug">{type}</span>
+  }
+};
+
+// ---------------------------------------------------------------------------------------
+// AppRoot
+// ---------------------------------------------------------------------------------------
+
+import _ from 'lodash';
+import Clubhouse from 'clubhouse-lib';
+
+const PROJECT_IDS = {
+  web_app: 5,
 }
 
-const $target = $('<div>').addClass('.js-target')
-$(document.body).append($target)
+// TODO: "duplicate" story data for multiple owners
+// TODO: replace SHOW_* constants with props
+class AppRoot extends React.Component {
+  constructor(props) {
+    super();
+    this.state = {groupedStories: null};
+  }
 
-clubhouse.listStories(PROJECT_IDS.web_app).then((response) => {
-  const groupedStories = groupStories(response);
-  return ReactDOM.render(<Root groupedStories={groupedStories}/>, $target[0]);
+  groupStories(stories) {
+    const grouped = _.groupBy(stories, x => x.owner_ids);
+    delete grouped[''];
+
+    Object.keys(grouped).forEach((ownerId) => {
+      grouped[ownerId] = grouped[ownerId].filter(x => {
+        if (workflowStates[x.workflow_state_id] == 'Completed') {
+          return this.props.showCompleted;
+        }
+        if (workflowStates[x.workflow_state_id] == 'Unscheduled') {
+          return this.props.showUnscheduled;
+        }
+        return true;
+      });
+    });
+
+    return grouped;
+  }
+
+  componentDidMount() {
+    const clubhouseClient = Clubhouse.create(secrets.clubhouse);
+    clubhouseClient.listStories(PROJECT_IDS.web_app).then((response) => {
+      this.setState({groupedStories: this.groupStories(response)});
+    });
+  }
+
+  renderMemberList() {
+    return (
+      <MemberList
+        members={members}
+        groupedStories={this.state.groupedStories}
+        showUnscheduled={false}
+        showCompleted={false}
+      />
+    );
+  }
+
+  render() {
+    return (
+      <div>
+        <Header />
+        {this.state.groupedStories ? this.renderMemberList() : <Loading />}
+      </div>
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------------------
+// index
+// ---------------------------------------------------------------------------------------
+
+import $ from 'jquery';
+
+$(document).ready(() => {
+  const $target = $('<div>').addClass('.js-target')
+  $(document.body).append($target)
+  ReactDOM.render(<AppRoot />, $target[0]);
 });
