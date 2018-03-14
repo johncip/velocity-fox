@@ -38,7 +38,7 @@
   text-align: right;
 }
 
-.story--workflowState {
+.story--state {
   @include badge;
   width: 15ch;
   color: $gray-light;

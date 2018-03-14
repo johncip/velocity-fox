@@ -79,7 +79,7 @@ class Story extends React.PureComponent {
     const url = `https://app.clubhouse.io/gradescope/story/${this.props.id}`
     return (
       <li className="story">
-        <span className="story--workflowState">
+        <span className="story--state">
           {workflowStates[this.props.workflow_state_id]}
         </span>
         <Estimate points={this.props.estimate} />
