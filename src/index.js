@@ -102,14 +102,14 @@ class Story extends React.PureComponent {
 class Estimate extends React.PureComponent {
   classes() {
     return classNames('story--estimate', {
-      'story--estimate-none': this.props.points
+      'story--estimate-none': !this.props.points
     });
   }
 
   render() {
     return (
       <span className={this.classes()}>
-        {this.props.points || '\u00a0'}
+        {this.props.points || '?'}
       </span>
     );
   }
@@ -117,11 +117,7 @@ class Estimate extends React.PureComponent {
 
 class StoryType extends React.PureComponent {
   classes() {
-    return classNames('story--type', {
-      'story--type-chore': this.props.type == 'chore',
-      'story--type-feature': this.props.type == 'feature',
-      'story--type-bug': this.props.type == 'bug'
-    });
+    return `story--type story--type-${this.props.type}`;
   }
 
   render() {
