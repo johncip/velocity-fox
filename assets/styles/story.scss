@@ -21,9 +21,18 @@
   font-family: $font-family-normal;
   display: flex;
   align-items: baseline;
+  padding-bottom: 1px;
 
   span + span {
     margin-left: 8px;
+  }
+}
+
+.story-archived {
+  opacity: 0.3;
+
+  .story--name {
+    opacity: 0.5;
   }
 }
 

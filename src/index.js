@@ -35,7 +35,10 @@ class MemberList extends React.PureComponent {
           return (
             <div className="storyList" key={ownerStr}>
               <h2 className="storyList--ownerName">{ownerNames}</h2>
-              <StoryList stories={this.props.groupedStories[ownerStr]} />
+              <StoryList
+                stories={this.props.groupedStories[ownerStr]}
+                showArchived={this.props.showArchived}
+              />
             </div>
           );
         })}
@@ -62,23 +65,33 @@ const Header = props =>
 
 class StoryList extends React.PureComponent {
   renderStory(story) {
+    if (story.archived && !this.props.showArchived) {
+      return null;
+    }
+
     return <Story key={story.id} {...story} />;
   }
 
   render() {
     return (
       <ul className="storyList--list">
-        {this.props.stories.map(this.renderStory)}
+        {this.props.stories.map(this.renderStory.bind(this))}
       </ul>
     );
   }
 }
 
 class Story extends React.PureComponent {
+  classes() {
+    return classNames('story', {
+      'story-archived': this.props.archived
+    });
+  }
+
   render() {
     const url = `https://app.clubhouse.io/gradescope/story/${this.props.id}`
     return (
-      <li className="story">
+      <li className={this.classes()}>
         <span className="story--state">
           {workflowStates[this.props.workflow_state_id]}
         </span>
@@ -176,6 +189,7 @@ class AppRoot extends React.Component {
         groupedStories={this.state.groupedStories}
         showUnscheduled={false}
         showCompleted={false}
+        showArchived={false}
       />
     );
   }
