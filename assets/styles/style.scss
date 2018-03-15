@@ -37,6 +37,24 @@ a {
   }
 }
 
+button {
+  @include badge;
+  border: 1px solid darken($ink-light, 10%);
+  padding: 2px 6px;
+  margin: 4px; // TODO
+  outline: none;
+
+  &:hover {
+    background-color: $ink;
+    border: 1px solid darken($ink, 10%);
+  }
+
+  &:active {
+    background-color: $red-light;
+    border: 1px solid darken($red-light, 10%);
+  }
+}
+
 // modules
 
 .loading {

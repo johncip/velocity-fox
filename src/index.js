@@ -154,6 +154,7 @@ class OwnerHeader extends React.PureComponent {
       <div className="ownerHeader">
         <img className="ownerHeader--avatar" src={this.avatarUrl()} />
         <h2 className="ownerHeader--mentionName">{'@' + this.props.owner.mention_name}</h2>
+        {this.props.children}
       </div>
     );
   }
@@ -165,28 +166,51 @@ class OwnerHeader extends React.PureComponent {
 
 // TODO: hide stories here
 class StoryList extends React.PureComponent {
+  static UNSCHEDULED = 0;
+  static IN_PROGRESS = 1;
+  static COMPLETED = 2;
+  static ARCHIVED = 3;
+
   constructor(props) {
     super(props);
     this.renderStory = this.renderStory.bind(this);
+
+    this.state = {filter: this.constructor.IN_PROGRESS};
   }
 
   filteredStories() {
-    let res = this.props.stories;
+    const stories = this.props.stories;
 
-    if (!this.props.showArchived) {
-      res = res.filter(x => !x.archived);
+    switch(this.state.filter) {
+      case this.constructor.UNSCHEDULED:
+        return stories.filter(x => workflowStates[x.workflow_state_id] === 'Unscheduled');
+
+      case this.constructor.IN_PROGRESS:
+        return stories.filter((x) => {
+          if (x.archived) {
+            return false;
+          } else if (workflowStates[x.workflow_state_id] === 'Ready for Dev') {
+            return true;
+          } else if (workflowStates[x.workflow_state_id] === 'Next Up') {
+            return true;
+          } else if (workflowStates[x.workflow_state_id] === 'In Development') {
+            return true;
+          } else if (workflowStates[x.workflow_state_id] === 'Ready for Review') {
+            return true;
+          } else {
+            return false;
+          }
+        });
+
+      case this.constructor.COMPLETED:
+        return stories.filter(x => workflowStates[x.workflow_state_id] === 'Completed');
+
+      case this.constructor.ARCHIVED:
+        return stories.filter(x => x.archived);
+
+      default:
+        return stories;
     }
-    if (!this.props.showCompleted) {
-      res = res.filter((x) => {
-        return workflowStates[x.workflow_state_id] !== 'Completed';
-      });
-    }
-    if (!this.props.showUnscheduled) {
-      res = res.filter((x) => {
-        return workflowStates[x.workflow_state_id] !== 'Unscheduled';
-      });
-    }
-    return res;
   }
 
   renderStory(story) {
@@ -199,7 +223,15 @@ class StoryList extends React.PureComponent {
 
     return (
       <div className="storyList">
-        <OwnerHeader owner={members[this.props.ownerId]} />
+        <OwnerHeader owner={members[this.props.ownerId]}>
+          <div>
+            <button onClick={(x) => { this.setState({filter: this.constructor.UNSCHEDULED}); }}>Unscheduled</button>
+            <button onClick={(x) => { this.setState({filter: this.constructor.IN_PROGRESS}); }}>In Progress</button>
+            <button onClick={(x) => { this.setState({filter: this.constructor.COMPLETED}); }}>Completed</button>
+            <button onClick={(x) => { this.setState({filter: this.constructor.ARCHIVED}); }}>Archived</button>
+          </div>
+        </OwnerHeader>
+
         <ul className="storyList--list">
           {stories.map(this.renderStory)}
         </ul>
