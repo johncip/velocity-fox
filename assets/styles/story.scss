@@ -3,14 +3,33 @@
     margin-top: 4px;
     margin-bottom: 4px;
   }
+
+  .ownerHeader {
+    margin-bottom: 16px;
+  }
 }
 
 .storyList + .storyList {
-  margin-top: 16px;
-  margin-bottom: 16px;
+  margin-top: 32px;
+  margin-bottom: 32px;
 }
 
-.storyList--ownerName {
+.ownerHeader {
+  display: flex;
+  align-items: center;
+
+  .ownerHeader--avatar {
+    margin-right: 8px;
+  }
+}
+
+.ownerHeader--avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.ownerHeader--ownerName {
   color: $ink;
   font-family: $font-family-bold;
   margin-bottom: 8px;
@@ -60,7 +79,19 @@
 }
 
 .story--estimate-none {
-  color: $ink-lighter;
+  color: darken($ink-lighter, 2%);
+}
+
+.story--epicBadge {
+  @include badge;
+  background-color: $white;
+  color: $gray-light;
+  width: 3.5ch;
+  border: solid 1px $gray-lighter;
+}
+
+.story--epicBadge-notInEpic {
+  color: lighten($gray-lighter, 5%);
 }
 
 .story--type {

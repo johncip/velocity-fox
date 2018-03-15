@@ -118,15 +118,14 @@ class MemberList extends React.PureComponent {
           }
 
           return (
-            <div className="storyList" key={ownerId}>
-              <OwnerHeader ownerId={ownerId} />
-              <StoryList
-                stories={stories}
-                showArchived={this.props.showArchived}
-                showUnscheduled={this.props.showUnscheduled}
-                showCompleted={this.props.showCompleted}
-              />
-            </div>
+            <StoryList
+              key={ownerId}
+              ownerId={ownerId}
+              stories={stories}
+              showArchived={this.props.showArchived}
+              showUnscheduled={this.props.showUnscheduled}
+              showCompleted={this.props.showCompleted}
+            />
           );
         })}
       </div>
@@ -143,11 +142,21 @@ const getOwnerName = (ownerId) => {
 };
 
 class OwnerHeader extends React.PureComponent {
-  render() {
-    const ownerName = getOwnerName(this.props.ownerId);
+  avatarUrl() {
+    const {display_icon_url, gravatar_hash} = this.props.owner;
 
+    if (display_icon_url) {
+      return display_icon_url;
+    }
+    return `https://www.gravatar.com/avatar/${gravatar_hash}`;
+  }
+
+  render() {
     return (
-      <h2 className="storyList--ownerName">{ownerName}</h2>
+      <div className="ownerHeader">
+        <img className="ownerHeader--avatar" src={this.avatarUrl()} />
+        <h2 className="ownerHeader--mentionName">{'@' + this.props.owner.mention_name}</h2>
+      </div>
     );
   }
 }
@@ -158,29 +167,45 @@ class OwnerHeader extends React.PureComponent {
 
 // TODO: hide stories here
 class StoryList extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.renderStory = this.renderStory.bind(this);
+  }
+
+  filteredStories() {
+    let res = this.props.stories;
+
+    if (!this.props.showArchived) {
+      res = res.filter(x => !x.archived);
+    }
+    if (!this.props.showCompleted) {
+      res = res.filter((x) => {
+        return workflowStates[x.workflow_state_id] !== 'Completed';
+      });
+    }
+    if (!this.props.showUnscheduled) {
+      res = res.filter((x) => {
+        return workflowStates[x.workflow_state_id] !== 'Unscheduled';
+      });
+    }
+    return res;
+  }
+
   renderStory(story) {
-    if (!this.props.showArchived && story.archived) {
-      return null;
-    }
-
-    const isCompleted = workflowStates[story.workflow_state_id] === 'Completed';
-    if (!this.props.showCompleted && isCompleted) {
-      return null;
-    }
-
-    const isUnscheduled = workflowStates[story.workflow_state_id] === 'Unscheduled';
-    if (!this.props.showUnscheduled && isUnscheduled) {
-      return null;
-    }
-
     return <Story key={story.id} {...story} />;
   }
 
   render() {
+    const stories = this.filteredStories();
+    if (!stories.length) { return null; }
+
     return (
-      <ul className="storyList--list">
-        {this.props.stories.map(this.renderStory.bind(this))}
-      </ul>
+      <div className="storyList">
+        <OwnerHeader owner={members[this.props.ownerId]} />
+        <ul className="storyList--list">
+          {stories.map(this.renderStory)}
+        </ul>
+      </div>
     );
   }
 }
@@ -199,6 +224,7 @@ class Story extends React.PureComponent {
         <span className="story--state">
           {workflowStates[this.props.workflow_state_id]}
         </span>
+        <EpicBadge epicId={this.props.epic_id} />
         <Estimate points={this.props.estimate} />
         <StoryType type={this.props.story_type} />
         <span className="story--id">
@@ -242,3 +268,19 @@ class StoryType extends React.PureComponent {
   }
 }
 
+class EpicBadge extends React.PureComponent {
+  classes() {
+    return classNames('story--epicBadge', {
+      'story--epicBadge-inEpic': this.props.epicId,
+      'story--epicBadge-notInEpic': !this.props.epicId
+    });
+  }
+
+  render() {
+    return (
+      <span className={this.classes()}>
+        {this.props.epicId ? 'e' : '-'}
+      </span>
+    );
+  }
+}
