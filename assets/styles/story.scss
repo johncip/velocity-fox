@@ -39,11 +39,9 @@
 .story--id {
   @include badge;
 
-  color: $gray-light;
-  border: solid 1px $gray-lighter;
-  background-color: white;
+  color: $ink-light;
+  background-color: transparent;
   width: 7.5ch;
-  padding-right: 4px;
   text-align: right;
 }
 
