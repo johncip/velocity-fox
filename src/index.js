@@ -70,6 +70,7 @@ class AppRoot extends React.Component {
         showUnscheduled={false}
         showCompleted={false}
         showArchived={false}
+        showUnowned={false}
       />
     );
   }
@@ -120,6 +121,10 @@ class MemberList extends React.PureComponent {
         {Object.keys(this.props.groupedStories).map((ownerId) => {
           const ownerName = getOwnerName(ownerId);
           const stories = this.props.groupedStories[ownerId];
+
+          if (!this.props.showUnowned && ownerId === NULL_OWNER_ID) {
+            return null;
+          }
 
           return (
             <div className="storyList" key={ownerId}>
