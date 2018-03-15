@@ -106,14 +106,6 @@ const Header = props =>
 
 import members from './members.js';
 
-const getOwnerName = (ownerId) => {
-  const member = members[ownerId];
-  if (!member) {
-    return ownerId;
-  }
-  return '@' + member.mention_name;
-};
-
 class MemberList extends React.PureComponent {
   render() {
     return (
@@ -142,6 +134,14 @@ class MemberList extends React.PureComponent {
     );
   }
 }
+
+const getOwnerName = (ownerId) => {
+  const member = members[ownerId];
+  if (!member) {
+    return ownerId;
+  }
+  return '@' + member.mention_name;
+};
 
 // -------------------------------------------------------------------------------------------
 // Story Components
