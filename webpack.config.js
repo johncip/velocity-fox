@@ -43,7 +43,7 @@ module.exports = {
         options: {
           cacheDirectory: true,
           presets: ['env', 'react'],
-          plugins: ['transform-object-rest-spread']
+          plugins: ['transform-object-rest-spread', 'transform-class-properties']
         }
       },
       {
