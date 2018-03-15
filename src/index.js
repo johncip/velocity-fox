@@ -111,7 +111,6 @@ class MemberList extends React.PureComponent {
     return (
       <div>
         {Object.keys(this.props.groupedStories).map((ownerId) => {
-          const ownerName = getOwnerName(ownerId);
           const stories = this.props.groupedStories[ownerId];
 
           if (!this.props.showUnowned && ownerId === NULL_OWNER_ID) {
@@ -120,7 +119,7 @@ class MemberList extends React.PureComponent {
 
           return (
             <div className="storyList" key={ownerId}>
-              <h2 className="storyList--ownerName">{ownerName}</h2>
+              <OwnerHeader ownerId={ownerId} />
               <StoryList
                 stories={stories}
                 showArchived={this.props.showArchived}
@@ -142,6 +141,16 @@ const getOwnerName = (ownerId) => {
   }
   return '@' + member.mention_name;
 };
+
+class OwnerHeader extends React.PureComponent {
+  render() {
+    const ownerName = getOwnerName(this.props.ownerId);
+
+    return (
+      <h2 className="storyList--ownerName">{ownerName}</h2>
+    );
+  }
+}
 
 // -------------------------------------------------------------------------------------------
 // Story Components
