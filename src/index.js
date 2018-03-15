@@ -148,7 +148,7 @@ class MemberList extends React.PureComponent {
 // TODO: hide stories here
 class StoryList extends React.PureComponent {
   renderStory(story) {
-    if (story.archived && !this.props.showArchived) {
+    if (!this.props.showArchived && story.archived) {
       return null;
     }
 
