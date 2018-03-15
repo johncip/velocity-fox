@@ -11,12 +11,10 @@ import workflowStates from './workflowStates.js';
 // index
 // ---------------------------------------------------------------------------------------
 
-import $ from 'jquery';
-
-$(document).ready(() => {
-  const $target = $('<div>').addClass('.js-target')
-  $(document.body).append($target)
-  ReactDOM.render(<AppRoot />, $target[0]);
+document.addEventListener('DOMContentLoaded', () => {
+  const target = document.createElement('div');
+  document.body.appendChild(target)
+  ReactDOM.render(<AppRoot />, target);
 });
 
 
