@@ -132,6 +132,8 @@ class MemberList extends React.PureComponent {
               <StoryList
                 stories={stories}
                 showArchived={this.props.showArchived}
+                showUnscheduled={this.props.showUnscheduled}
+                showCompleted={this.props.showCompleted}
               />
             </div>
           );
@@ -149,6 +151,16 @@ class MemberList extends React.PureComponent {
 class StoryList extends React.PureComponent {
   renderStory(story) {
     if (!this.props.showArchived && story.archived) {
+      return null;
+    }
+
+    const isCompleted = workflowStates[story.workflow_state_id] === 'Completed';
+    if (!this.props.showCompleted && isCompleted) {
+      return null;
+    }
+
+    const isUnscheduled = workflowStates[story.workflow_state_id] === 'Unscheduled';
+    if (!this.props.showUnscheduled && isUnscheduled) {
       return null;
     }
 
