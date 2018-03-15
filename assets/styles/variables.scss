@@ -26,6 +26,7 @@ $story-inner-margin: 4px;
 // mixins
 
 @mixin badge {
+  flex-shrink: 0;
   border-radius: 2px;
   color: white;
   background-color: $ink-light;
