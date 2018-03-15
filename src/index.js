@@ -21,22 +21,19 @@ const getOwnerName = (ownerId) => {
   return '@' + member.mention_name;
 };
 
-const getOwnerNames = (ownerStr) => {
-  const ownerIds = ownerStr.split(',');
-  return ownerIds.map(getOwnerName).join(', ');
-};
-
 class MemberList extends React.PureComponent {
   render() {
     return (
       <div>
-        {Object.keys(this.props.groupedStories).map((ownerStr) => {
-          const ownerNames = getOwnerNames(ownerStr);
+        {Object.keys(this.props.groupedStories).map((ownerId) => {
+          const ownerName = getOwnerName(ownerId);
+          const stories = this.props.groupedStories[ownerId];
+
           return (
-            <div className="storyList" key={ownerStr}>
-              <h2 className="storyList--ownerName">{ownerNames}</h2>
+            <div className="storyList" key={ownerId}>
+              <h2 className="storyList--ownerName">{ownerName}</h2>
               <StoryList
-                stories={this.props.groupedStories[ownerStr]}
+                stories={stories}
                 showArchived={this.props.showArchived}
               />
             </div>
@@ -63,6 +60,7 @@ const Header = props =>
     <img src={foxIcon} height={50} />
   </header>
 
+// TODO: hide stories here
 class StoryList extends React.PureComponent {
   renderStory(story) {
     if (story.archived && !this.props.showArchived) {
@@ -149,36 +147,35 @@ const PROJECT_IDS = {
   web_app: 5,
 }
 
-// TODO: "duplicate" story data for multiple owners
+const NULL_OWNER_ID = 'no-owner';
+
+// Given a list of stories & called from Array.reduce, creates a map: {owner_id => [stories]}
+const indexStoriesByOwner = (result, story) => {
+  if (!story.owner_ids.length) {
+    story.owner_ids.push(NULL_OWNER_ID);
+  }
+
+  story.owner_ids.forEach((id) => {
+    if (!result[id]) {
+      result[id] = [];
+    }
+    result[id].push(story);
+  });
+
+  return result;
+};
+
 class AppRoot extends React.Component {
   constructor(props) {
     super();
     this.state = {groupedStories: null};
   }
 
-  groupStories(stories) {
-    const grouped = _.groupBy(stories, x => x.owner_ids);
-    delete grouped[''];
-
-    Object.keys(grouped).forEach((ownerId) => {
-      grouped[ownerId] = grouped[ownerId].filter(x => {
-        if (workflowStates[x.workflow_state_id] == 'Completed') {
-          return this.props.showCompleted;
-        }
-        if (workflowStates[x.workflow_state_id] == 'Unscheduled') {
-          return this.props.showUnscheduled;
-        }
-        return true;
-      });
-    });
-
-    return grouped;
-  }
-
   componentDidMount() {
     const clubhouseClient = Clubhouse.create(secrets.clubhouse);
     clubhouseClient.listStories(PROJECT_IDS.web_app).then((response) => {
-      this.setState({groupedStories: this.groupStories(response)});
+      const groupedStories = response.reduce(indexStoriesByOwner, {});
+      this.setState({groupedStories});
     });
   }
 
