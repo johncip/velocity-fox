@@ -46,10 +46,17 @@ const indexStoriesByOwner = (result, story) => {
   return result;
 };
 
+const FILTER = {
+  unscheduled: 'unscheduled',
+  inProgress: 'inProgress',
+  completed: 'completed',
+  archived: 'archived'
+};
+
 class AppRoot extends React.Component {
   constructor(props) {
     super();
-    this.state = {groupedStories: null};
+    this.state = {groupedStories: null, filter: this.constructor.IN_PROGRESS};
   }
 
   componentDidMount() {
@@ -65,9 +72,7 @@ class AppRoot extends React.Component {
       <MemberList
         members={members}
         groupedStories={this.state.groupedStories}
-        showUnscheduled={false}
-        showCompleted={false}
-        showArchived={false}
+        filter={this.state.filter}
         showUnowned={false}
       />
     );
@@ -76,7 +81,14 @@ class AppRoot extends React.Component {
   render() {
     return (
       <div>
-        <Header />
+        <Header>
+          <div>
+            <button onClick={(x) => { this.setState({filter: FILTER.unscheduled}); }}>Unscheduled</button>
+            <button onClick={(x) => { this.setState({filter: FILTER.inProgress}); }}>In Progress</button>
+            <button onClick={(x) => { this.setState({filter: FILTER.completed}); }}>Completed</button>
+            <button onClick={(x) => { this.setState({filter: FILTER.archived}); }}>Archived</button>
+          </div>
+        </Header>
         <div className="content">
           {this.state.groupedStories ? this.renderMemberList() : <Loading />}
         </div>
@@ -94,6 +106,7 @@ import foxIcon from '../assets/pretty.png';
 
 const Header = props =>
   <header className="header">
+    {props.children}
     <img src={foxIcon} height={50} />
   </header>
 
@@ -120,9 +133,7 @@ class MemberList extends React.PureComponent {
               key={ownerId}
               ownerId={ownerId}
               stories={stories}
-              showArchived={this.props.showArchived}
-              showUnscheduled={this.props.showUnscheduled}
-              showCompleted={this.props.showCompleted}
+              filter={this.props.filter}
             />
           );
         })}
@@ -166,26 +177,19 @@ class OwnerHeader extends React.PureComponent {
 
 // TODO: hide stories here
 class StoryList extends React.PureComponent {
-  static UNSCHEDULED = 0;
-  static IN_PROGRESS = 1;
-  static COMPLETED = 2;
-  static ARCHIVED = 3;
-
   constructor(props) {
     super(props);
     this.renderStory = this.renderStory.bind(this);
-
-    this.state = {filter: this.constructor.IN_PROGRESS};
   }
 
   filteredStories() {
     const stories = this.props.stories;
 
-    switch(this.state.filter) {
-      case this.constructor.UNSCHEDULED:
+    switch(this.props.filter) {
+      case FILTER.unscheduled:
         return stories.filter(x => workflowStates[x.workflow_state_id] === 'Unscheduled');
 
-      case this.constructor.IN_PROGRESS:
+      case FILTER.inProgress:
         return stories.filter((x) => {
           if (x.archived) {
             return false;
@@ -202,10 +206,10 @@ class StoryList extends React.PureComponent {
           }
         });
 
-      case this.constructor.COMPLETED:
+      case FILTER.completed:
         return stories.filter(x => workflowStates[x.workflow_state_id] === 'Completed');
 
-      case this.constructor.ARCHIVED:
+      case FILTER.archived:
         return stories.filter(x => x.archived);
 
       default:
@@ -223,15 +227,7 @@ class StoryList extends React.PureComponent {
 
     return (
       <div className="storyList">
-        <OwnerHeader owner={members[this.props.ownerId]}>
-          <div>
-            <button onClick={(x) => { this.setState({filter: this.constructor.UNSCHEDULED}); }}>Unscheduled</button>
-            <button onClick={(x) => { this.setState({filter: this.constructor.IN_PROGRESS}); }}>In Progress</button>
-            <button onClick={(x) => { this.setState({filter: this.constructor.COMPLETED}); }}>Completed</button>
-            <button onClick={(x) => { this.setState({filter: this.constructor.ARCHIVED}); }}>Archived</button>
-          </div>
-        </OwnerHeader>
-
+        <OwnerHeader owner={members[this.props.ownerId]}></OwnerHeader>
         <ul className="storyList--list">
           {stories.map(this.renderStory)}
         </ul>
