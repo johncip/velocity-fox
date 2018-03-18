@@ -4,15 +4,15 @@ $ink: rgb(51, 51, 102);
 $ink-light: rgb(165, 165, 210);
 $ink-lighter: rgb(200, 200, 235);
 
-$ink-10: lighten($ink, 10%);
-$ink-20: lighten($ink, 20%);
-$ink-30: lighten($ink, 30%);
-$ink-40: lighten($ink, 40%);
-$ink-50: lighten($ink, 50%);
-$ink-60: lighten($ink, 60%);
-$ink-70: lighten($ink, 70%);
-$ink-80: lighten($ink, 80%);
-$ink-90: lighten($ink, 90%);
+$ink-10: tint($ink, 10%);
+$ink-20: tint($ink, 20%);
+$ink-30: tint($ink, 30%);
+$ink-40: tint($ink, 40%);
+$ink-50: tint($ink, 50%);
+$ink-60: tint($ink, 60%);
+$ink-70: tint($ink, 70%);
+$ink-80: tint($ink, 80%);
+$ink-90: tint($ink, 90%);
 
 $red: red;
 
