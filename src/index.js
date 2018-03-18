@@ -70,9 +70,22 @@ class AppRoot extends React.PureComponent {
 
   componentDidMount() {
     const clubhouseClient = Clubhouse.create(secrets.clubhouse);
-    clubhouseClient.listStories(PROJECT_IDS.web_app).then((response) => {
-      const groupedStories = response.reduce(indexStoriesByOwner, {});
-      this.setState({groupedStories});
+    let stories = [];
+
+    // TODO: clean up
+    clubhouseClient.listStories(PROJECT_IDS.web_app).then((resp) => {
+      stories = stories.concat(resp);
+
+      clubhouseClient.listStories(PROJECT_IDS.dev_ops).then((resp) => {
+        stories = stories.concat(resp);
+
+        clubhouseClient.listStories(PROJECT_IDS.pandagrader).then((resp) => {
+          stories = stories.concat(resp);
+
+          const groupedStories = stories.reduce(indexStoriesByOwner, {});
+          this.setState({groupedStories});
+        });
+      });
     });
   }
 
