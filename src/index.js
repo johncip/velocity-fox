@@ -53,7 +53,7 @@ const FILTER = {
   archived: 'archived'
 };
 
-class AppRoot extends React.Component {
+class AppRoot extends React.PureComponent {
   constructor(props) {
     super();
     this.state = {groupedStories: null, filter: this.constructor.IN_PROGRESS};
