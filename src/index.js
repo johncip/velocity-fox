@@ -65,7 +65,7 @@ class AppRoot extends React.PureComponent {
 
   constructor(props) {
     super();
-    this.state = {groupedStories: null, filter: this.constructor.IN_PROGRESS};
+    this.state = {groupedStories: null, filter: FILTER.inProgress};
   }
 
   componentDidMount() {
