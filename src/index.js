@@ -56,6 +56,13 @@ const FILTER = {
 };
 
 class AppRoot extends React.PureComponent {
+  static buttonCaptions = {
+    [FILTER.unscheduled]: 'Unscheduled',
+    [FILTER.inProgress]: 'In Progress',
+    [FILTER.completed]: 'Completed',
+    [FILTER.archived]: 'Archived'
+  };
+
   constructor(props) {
     super();
     this.state = {groupedStories: null, filter: this.constructor.IN_PROGRESS};
@@ -67,6 +74,21 @@ class AppRoot extends React.PureComponent {
       const groupedStories = response.reduce(indexStoriesByOwner, {});
       this.setState({groupedStories});
     });
+  }
+
+  renderFilterButtons() {
+    return (
+      <div>
+        {Object.keys(FILTER).map(filter =>
+          <FilterButton
+            key={filter}
+            onClick={x => this.setState({filter})}
+            active={this.state.filter === filter}
+          >
+            {this.constructor.buttonCaptions[filter]}
+          </FilterButton>)}
+      </div>
+    );
   }
 
   renderMemberList() {
@@ -84,17 +106,31 @@ class AppRoot extends React.PureComponent {
     return (
       <div>
         <Header>
-          <div>
-            <button onClick={(x) => { this.setState({filter: FILTER.unscheduled}); }}>Unscheduled</button>
-            <button onClick={(x) => { this.setState({filter: FILTER.inProgress}); }}>In Progress</button>
-            <button onClick={(x) => { this.setState({filter: FILTER.completed}); }}>Completed</button>
-            <button onClick={(x) => { this.setState({filter: FILTER.archived}); }}>Archived</button>
-          </div>
+        {this.renderFilterButtons()}
         </Header>
         <div className="content">
           {this.state.groupedStories ? this.renderMemberList() : <Loading />}
         </div>
       </div>
+    );
+  }
+}
+
+class FilterButton extends React.PureComponent {
+  classes() {
+    return classNames('filterButton', {
+      'filterButton-active': this.props.active
+    });
+  }
+
+  render() {
+    return (
+      <button
+        className={this.classes()}
+        onClick={this.props.onClick}
+      >
+        {this.props.children}
+      </button>
     );
   }
 }
