@@ -26,6 +26,8 @@ import Clubhouse from 'clubhouse-lib';
 
 const PROJECT_IDS = {
   web_app: 5,
+  dev_ops: 16,
+  pandagrader: 3154
 }
 
 const NULL_OWNER_ID = 'no-owner';
