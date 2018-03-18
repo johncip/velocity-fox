@@ -48,7 +48,16 @@ module.exports = {
       },
       {
         test: /\.(s*)css$/,
-        use: ['style-loader', 'css-loader', 'sass-loader']
+        use: [
+          {loader: 'style-loader'},
+          {loader: 'css-loader'},
+          {
+            loader: 'sass-loader',
+            options: {
+              includePaths: require('bourbon').includePaths
+            }
+          }
+        ]
       },
       {
         test: /\.(jpg|png|gif|svg)$/,
