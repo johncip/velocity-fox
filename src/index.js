@@ -1,3 +1,4 @@
+import '../node_modules/lato-font/scss/lato-font.scss';
 import '../assets/styles/style.scss';
 
 import React from 'react';

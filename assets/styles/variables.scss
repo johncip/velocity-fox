@@ -36,11 +36,7 @@ $white: rgb(255, 255, 255);
 
 $bg: rgb(240, 245, 255);
 
-$font-family-light: 'LatoWebLight';
-$font-family-normal: 'LatoWeb';
-$font-family-bold: 'LatoWebBold';
-$font-family-black: 'LatoWebBlack';
-
+$font-family: 'Lato';
 $font-size-small: 10pt;
 $font-size-normal: 12pt;
 
@@ -54,8 +50,9 @@ $story-inner-margin: 4px;
   color: white;
   background-color: $ink-light;
   text-align: center;
-  font-family: $font-family-bold;
+  font-family: $font-family;
   font-size: $font-size-small;
+  font-weight: bold;
   display: inline-block;
   padding-bottom: 1px;
   min-height: 1.3em;
