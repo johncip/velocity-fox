@@ -13,6 +13,7 @@ import workflowStates from './workflowStates.js';
 // ---------------------------------------------------------------------------------------
 
 document.addEventListener('DOMContentLoaded', () => {
+  document.body.classList.add('watermarkedBody');
   const target = document.createElement('div');
   document.body.appendChild(target)
   ReactDOM.render(<AppRoot />, target);

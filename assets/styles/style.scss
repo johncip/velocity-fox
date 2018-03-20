@@ -83,6 +83,21 @@ $header-height: 60px;
   color: $white;
 }
 
+.watermarkedBody::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.05;
+  z-index: -1;
+  background: url('../pretty.png');
+  background-repeat: no-repeat;
+  background-position: bottom right;
+  background-size: 40%;
+}
+
 .filterButton {
   @include badge;
 
