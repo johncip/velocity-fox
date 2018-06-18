@@ -32,24 +32,6 @@ const PROJECT_IDS = {
   pandagrader: 3154
 }
 
-const NULL_OWNER_ID = 'no-owner';
-
-// Given a list of stories & called from Array.reduce, creates a map: {owner_id => [stories]}
-const indexStoriesByOwner = (result, story) => {
-  if (!story.owner_ids.length) {
-    story.owner_ids.push(NULL_OWNER_ID);
-  }
-
-  story.owner_ids.forEach((id) => {
-    if (!result[id]) {
-      result[id] = [];
-    }
-    result[id].push(story);
-  });
-
-  return result;
-};
-
 const FILTER = {
   unscheduled: 'unscheduled',
   inProgress: 'inProgress',
@@ -67,27 +49,15 @@ class AppRoot extends React.PureComponent {
 
   constructor(props) {
     super();
-    this.state = {groupedStories: null, filter: FILTER.inProgress};
+    this.state = {stories: null, filter: FILTER.inProgress};
   }
 
   componentDidMount() {
     const clubhouseClient = Clubhouse.create(secrets.clubhouse);
     let stories = [];
-
-    // TODO: clean up
     clubhouseClient.listStories(PROJECT_IDS.web_app).then((resp) => {
       stories = stories.concat(resp);
-
-      clubhouseClient.listStories(PROJECT_IDS.dev_ops).then((resp) => {
-        stories = stories.concat(resp);
-
-        clubhouseClient.listStories(PROJECT_IDS.pandagrader).then((resp) => {
-          stories = stories.concat(resp);
-
-          const groupedStories = stories.reduce(indexStoriesByOwner, {});
-          this.setState({groupedStories});
-        });
-      });
+      this.setState({stories});
     });
   }
 
@@ -106,13 +76,11 @@ class AppRoot extends React.PureComponent {
     );
   }
 
-  renderMemberList() {
+  renderStoryList() {
     return (
-      <MemberList
-        members={members}
-        groupedStories={this.state.groupedStories}
+      <StoryList
+        stories={this.state.stories}
         filter={this.state.filter}
-        showUnowned={false}
       />
     );
   }
@@ -124,7 +92,7 @@ class AppRoot extends React.PureComponent {
         {this.renderFilterButtons()}
         </Header>
         <div className="content">
-          {this.state.groupedStories ? this.renderMemberList() : <Loading />}
+          {this.state.stories ? this.renderStoryList() : <Loading />}
         </div>
       </div>
     );
@@ -163,66 +131,6 @@ const Header = props =>
     <img src={foxIcon} height={50} />
   </header>
 
-
-// -------------------------------------------------------------------------------------------
-// MemberList
-// -------------------------------------------------------------------------------------------
-
-import members from './members.js';
-
-class MemberList extends React.PureComponent {
-  render() {
-    return (
-      <div>
-        {Object.keys(this.props.groupedStories).map((ownerId) => {
-          const stories = this.props.groupedStories[ownerId];
-
-          if (!this.props.showUnowned && ownerId === NULL_OWNER_ID) {
-            return null;
-          }
-
-          return (
-            <StoryList
-              key={ownerId}
-              ownerId={ownerId}
-              stories={stories}
-              filter={this.props.filter}
-            />
-          );
-        })}
-      </div>
-    );
-  }
-}
-
-const getOwnerName = (ownerId) => {
-  const member = members[ownerId];
-  if (!member) {
-    return ownerId;
-  }
-  return '@' + member.mention_name;
-};
-
-class OwnerHeader extends React.PureComponent {
-  avatarUrl() {
-    const {display_icon_url, gravatar_hash} = this.props.owner;
-
-    if (display_icon_url) {
-      return display_icon_url;
-    }
-    return `https://www.gravatar.com/avatar/${gravatar_hash}`;
-  }
-
-  render() {
-    return (
-      <div className="ownerHeader">
-        <img className="ownerHeader--avatar" src={this.avatarUrl()} />
-        <h2 className="ownerHeader--mentionName">{'@' + this.props.owner.mention_name}</h2>
-        {this.props.children}
-      </div>
-    );
-  }
-}
 
 // -------------------------------------------------------------------------------------------
 // Story Components
@@ -280,7 +188,6 @@ class StoryList extends React.PureComponent {
 
     return (
       <div className="storyList">
-        <OwnerHeader owner={members[this.props.ownerId]}></OwnerHeader>
         <ul className="storyList--list">
           {stories.map(this.renderStory)}
         </ul>
