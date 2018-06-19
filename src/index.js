@@ -218,7 +218,7 @@ class Story extends React.PureComponent {
           {workflowStates[this.props.workflow_state_id]}
         </span>
         <EpicBadge epicId={this.props.epic_id} />
-        <LabelCount labels={this.props.labels} />
+        <UserLabelCount labels={this.props.labels} />
         <StoryType type={this.props.story_type} />
         <span className="story--id">
           <a href={url}>
@@ -235,11 +235,21 @@ class Story extends React.PureComponent {
   }
 }
 
-class LabelCount extends React.PureComponent {
+class UserLabelCount extends React.PureComponent {
+  count() {
+    if (!this.props.labels) {
+      return 0;
+    }
+
+    return this.props.labels.filter((x) => {
+      return x.name.startsWith('user');
+    }).length;
+  }
+
   render() {
     return (
       <span className='story--labelCount'>
-        {this.props.labels && this.props.labels.length}
+        {this.count()}
       </span>
     );
   }
