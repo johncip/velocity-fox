@@ -72,7 +72,7 @@
   background-color: $white;
 }
 
-.story--estimate {
+.story--estimate, .story--labelCount {
   @include badge;
   width: 3.5ch;
   border: solid 1px darken($ink-light, 10%);

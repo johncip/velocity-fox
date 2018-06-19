@@ -211,7 +211,7 @@ class Story extends React.PureComponent {
           {workflowStates[this.props.workflow_state_id]}
         </span>
         <EpicBadge epicId={this.props.epic_id} />
-        <Estimate points={this.props.estimate} />
+        <LabelCount labels={this.props.labels} />
         <StoryType type={this.props.story_type} />
         <span className="story--id">
           <a href={url}>
@@ -228,17 +228,11 @@ class Story extends React.PureComponent {
   }
 }
 
-class Estimate extends React.PureComponent {
-  classes() {
-    return classNames('story--estimate', {
-      'story--estimate-none': !this.props.points
-    });
-  }
-
+class LabelCount extends React.PureComponent {
   render() {
     return (
-      <span className={this.classes()}>
-        {this.props.points || '?'}
+      <span className='story--labelCount'>
+        {this.props.labels && this.props.labels.length}
       </span>
     );
   }
