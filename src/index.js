@@ -178,12 +178,19 @@ class StoryList extends React.PureComponent {
     }
   }
 
+  sortedStories() {
+    const stories = this.filteredStories();
+    return stories.sort((a, b) => {
+      return b.labels.length - a.labels.length;
+    });
+  }
+
   renderStory(story) {
     return <Story key={story.id} {...story} />;
   }
 
   render() {
-    const stories = this.filteredStories();
+    const stories = this.sortedStories();
     if (!stories.length) { return null; }
 
     return (
